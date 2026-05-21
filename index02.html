@@ -1,0 +1,687 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Treinamento de Dança 2026</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 20px;
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            padding: 30px;
+        }
+        
+        h1 {
+            color: #333;
+            text-align: center;
+            margin-bottom: 10px;
+            font-size: 2.5em;
+        }
+        
+        .info-box {
+            background: #f0f8ff;
+            border-left: 4px solid #667eea;
+            padding: 15px;
+            margin-bottom: 25px;
+            border-radius: 5px;
+        }
+        
+        .info-box p {
+            margin: 8px 0;
+            font-size: 1.1em;
+            color: #333;
+        }
+        
+        .datetime {
+            font-weight: bold;
+            color: #667eea;
+            font-size: 1.2em;
+        }
+        
+        .edit-datetime {
+            background: white;
+            border: 2px solid #667eea;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 25px;
+        }
+        
+        .edit-datetime h3 {
+            color: #667eea;
+            margin-bottom: 15px;
+            font-size: 1.2em;
+        }
+        
+        .input-group {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+        
+        .input-field {
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .input-field label {
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 5px;
+            font-size: 0.95em;
+        }
+        
+        .input-field input {
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 1em;
+            transition: border-color 0.3s;
+        }
+        
+        .input-field input:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 5px rgba(102, 126, 234, 0.3);
+        }
+        
+        .button-group {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+        
+        button {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            font-weight: bold;
+            cursor: pointer;
+            font-size: 1em;
+            transition: all 0.3s;
+        }
+        
+        .btn-aplicar {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+        
+        .btn-aplicar:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+        
+        .btn-agora {
+            background: #28a745;
+            color: white;
+        }
+        
+        .btn-agora:hover {
+            background: #218838;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(40, 167, 69, 0.4);
+        }
+        
+        .alerta {
+            color: #856404;
+            background-color: #fff3cd;
+            border: 1px solid #ffeaa7;
+            padding: 10px;
+            border-radius: 5px;
+            margin-top: 10px;
+            font-size: 0.9em;
+        }
+        
+        .calendario-section {
+            background: white;
+            border: 2px solid #667eea;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 25px;
+        }
+        
+        .calendario-section h3 {
+            color: #667eea;
+            margin-bottom: 15px;
+            font-size: 1.2em;
+        }
+        
+        .calendario {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 8px;
+            margin-bottom: 15px;
+        }
+        
+        .dia-semana {
+            text-align: center;
+            font-weight: bold;
+            color: #667eea;
+            padding: 10px;
+            background: #f0f8ff;
+            border-radius: 5px;
+        }
+        
+        .dia {
+            aspect-ratio: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s;
+            background: white;
+            color: #333;
+            font-size: 1.1em;
+        }
+        
+        .dia:hover {
+            border-color: #667eea;
+            background: #f0f8ff;
+            transform: scale(1.05);
+        }
+        
+        .dia.selecionado {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-color: #667eea;
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+        }
+        
+        .dia.treino {
+            border-color: #28a745;
+            background: #d4edda;
+            color: #155724;
+        }
+        
+        .dia.treino.selecionado {
+            background: linear-gradient(135deg, #28a745 0%, #1e7e34 100%);
+            color: white;
+            border-color: #28a745;
+        }
+        
+        .legenda-calendario {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 1px solid #ddd;
+            font-size: 0.9em;
+        }
+        
+        .legenda-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .legenda-box {
+            width: 25px;
+            height: 25px;
+            border-radius: 5px;
+            border: 2px solid;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        
+        th {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 15px;
+            text-align: left;
+            font-weight: bold;
+            border: 2px solid #667eea;
+        }
+        
+        td {
+            border: 1px solid #ddd;
+            padding: 12px 15px;
+            font-size: 1em;
+        }
+        
+        tr:hover {
+            background-color: #f5f5f5;
+            transition: background-color 0.3s ease;
+        }
+        
+        tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+        
+        .status-active {
+            background-color: #d4edda;
+            color: #155724;
+            padding: 5px 10px;
+            border-radius: 5px;
+            font-weight: bold;
+        }
+        
+        .status-inactive {
+            background-color: #f8d7da;
+            color: #721c24;
+            padding: 5px 10px;
+            border-radius: 5px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🎭 Treinamento de Dança 2026</h1>
+        
+        <div class="info-box">
+            <p>� Aluno: <span class="datetime" id="nomeAluno">Digite seu nome</span></p>
+            <p>📅 Data e Hora Atual: <span class="datetime" id="dataHora">--:--:--</span></p>
+            <p>📍 Próximo Treinamento: <span id="proximoTreinamento">--</span></p>
+        </div>
+
+        <div class="edit-datetime">
+            <h3>⚙️ Informações do Aluno e Ajustes</h3>
+            <div class="input-group">
+                <div class="input-field">
+                    <label for="nomeInput">Nome do Aluno:</label>
+                    <input type="text" id="nomeInput" placeholder="Digite seu nome" value="Dança">
+                </div>
+                <div class="input-field">
+                    <label for="diaInput">Dia (1-31):</label>
+                    <input type="number" id="diaInput" min="1" max="31" value="21">
+                </div>
+                <div class="input-field">
+                    <label for="horaInput">Hora (0-23):</label>
+                    <input type="number" id="horaInput" min="0" max="23" value="12">
+                </div>
+                <div class="input-field">
+                    <label for="minutoInput">Minuto (0-59):</label>
+                    <input type="number" id="minutoInput" min="0" max="59" value="0">
+                </div>
+                <div class="input-field">
+                    <label for="segundoInput">Segundo (0-59):</label>
+                    <input type="number" id="segundoInput" min="0" max="59" value="0">
+                </div>
+            </div>
+            
+            <h3 style="margin-top: 25px; color: #667eea;">📋 Editar Semanas de Treinamento</h3>
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; margin-top: 15px;">
+                <div class="input-field">
+                    <label>
+                        <input type="checkbox" id="seg" checked onchange="atualizarSemanas()"> Segunda-feira
+                    </label>
+                    <input type="text" id="segHora" placeholder="Horário" value="18:00-19:30" style="margin-top: 5px; padding: 8px; border: 1px solid #ddd; border-radius: 5px;">
+                </div>
+                <div class="input-field">
+                    <label>
+                        <input type="checkbox" id="qua" checked onchange="atualizarSemanas()"> Quarta-feira
+                    </label>
+                    <input type="text" id="quaHora" placeholder="Horário" value="18:00-19:30" style="margin-top: 5px; padding: 8px; border: 1px solid #ddd; border-radius: 5px;">
+                </div>
+                <div class="input-field">
+                    <label>
+                        <input type="checkbox" id="sex" checked onchange="atualizarSemanas()"> Sexta-feira
+                    </label>
+                    <input type="text" id="sexHora" placeholder="Horário" value="19:00-20:30" style="margin-top: 5px; padding: 8px; border: 1px solid #ddd; border-radius: 5px;">
+                </div>
+                <div class="input-field">
+                    <label>
+                        <input type="checkbox" id="sab" checked onchange="atualizarSemanas()"> Sábado
+                    </label>
+                    <input type="text" id="sabHora" placeholder="Horário" value="14:00-15:30" style="margin-top: 5px; padding: 8px; border: 1px solid #ddd; border-radius: 5px;">
+                </div>
+            </div>
+            
+            <div class="button-group" style="margin-top: 20px;">
+                <button class="btn-aplicar" onclick="aplicarTodosOsDados()">✓ Aplicar Todas as Alterações</button>
+                <button class="btn-agora" onclick="resetarParaAgora()">🔄 Usar Hora Atual</button>
+            </div>
+            <div class="alerta">
+                ℹ️ Nota: A data, hora e semanas customizadas serão usadas apenas para teste. Ao recarregar a página, voltará para os valores padrão.
+            </div>
+        </div>
+
+        <div class="calendario-section">
+            <h3>📅 Calendario - Maio 2026</h3>
+            <div class="calendario" id="calendarioMaio">
+                <!-- Será preenchido por JavaScript -->
+            </div>
+            <div class="legenda-calendario">
+                <div class="legenda-item">
+                    <div class="legenda-box" style="background: white; border-color: #ddd;"></div>
+                    <span>Dia normal</span>
+                </div>
+                <div class="legenda-item">
+                    <div class="legenda-box" style="background: #d4edda; border-color: #28a745;"></div>
+                    <span>Dia com treinamento</span>
+                </div>
+                <div class="legenda-item">
+                    <div class="legenda-box" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border-color: #667eea;"></div>
+                    <span>Dia selecionado</span>
+                </div>
+            </div>
+        </div>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>Dia da Semana</th>
+                    <th>Horário Início</th>
+                    <th>Horário de Chegada</th>
+                    <th>Horário de Saída</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+            <tbody>
+            </tbody>
+        </table>
+    </div>
+
+    <script>
+        // Mapeamento de dias
+        const diasSemana = ['domingo', 'segunda-feira', 'terça-feira', 'quarta-feira', 'quinta-feira', 'sexta-feira', 'sábado'];
+        
+        // Variável para armazenar data/hora customizada
+        let dataCustomizada = null;
+        
+        // Horários de treinamento padrão (minutos a partir de 00:00)
+        let treinamentos = [
+            { dia: 1, nome: 'segunda-feira', inicio: 18 * 60, chegada: 17 * 60 + 45, saida: 19 * 60 + 30 },
+            { dia: 3, nome: 'quarta-feira', inicio: 18 * 60, chegada: 17 * 60 + 45, saida: 19 * 60 + 30 },
+            { dia: 5, nome: 'sexta-feira', inicio: 19 * 60, chegada: 18 * 60 + 45, saida: 20 * 60 + 30 },
+            { dia: 6, nome: 'sábado', inicio: 14 * 60, chegada: 13 * 60 + 45, saida: 15 * 60 + 30 }
+        ];
+
+        function gerarCalendario() {
+            const calendarioDiv = document.getElementById('calendarioMaio');
+            calendarioDiv.innerHTML = '';
+            
+            // Adicionar header com dias da semana
+            const diasHeader = ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sab'];
+            diasHeader.forEach(dia => {
+                const headerDiv = document.createElement('div');
+                headerDiv.className = 'dia-semana';
+                headerDiv.textContent = dia;
+                calendarioDiv.appendChild(headerDiv);
+            });
+            
+            // Primeiro dia de maio 2026 é sexta-feira (dia 5 da semana, índice 5)
+            const primeiroMaio = new Date(2026, 4, 1);
+            const ultimoDiaMaio = new Date(2026, 4, 31);
+            const diasVazios = primeiroMaio.getDay();
+            
+            // Dias vazios antes do primeiro dia do mês
+            for (let i = 0; i < diasVazios; i++) {
+                const diaDiv = document.createElement('div');
+                diaDiv.className = 'dia';
+                diaDiv.style.visibility = 'hidden';
+                calendarioDiv.appendChild(diaDiv);
+            }
+            
+            // Dias do mês
+            for (let dia = 1; dia <= 31; dia++) {
+                const diaDiv = document.createElement('div');
+                const dataAtual = new Date(2026, 4, dia);
+                const diaSemana = dataAtual.getDay();
+                
+                // Verificar se é um dia com treinamento
+                const temTreinamento = treinamentos.some(t => t.dia === diaSemana);
+                
+                diaDiv.className = 'dia';
+                if (temTreinamento) {
+                    diaDiv.classList.add('treino');
+                }
+                
+                diaDiv.textContent = dia;
+                diaDiv.onclick = () => selecionarDiaCalendario(dia, diaDiv);
+                
+                // Destacar dia selecionado
+                const diaAtualInput = parseInt(document.getElementById('diaInput').value);
+                if (dia === diaAtualInput) {
+                    diaDiv.classList.add('selecionado');
+                }
+                
+                calendarioDiv.appendChild(diaDiv);
+            }
+        }
+
+        function selecionarDiaCalendario(dia, element) {
+            // Remove seleção anterior
+            document.querySelectorAll('.dia.selecionado').forEach(el => {
+                el.classList.remove('selecionado');
+            });
+            
+            // Adiciona seleção ao novo dia
+            element.classList.add('selecionado');
+            
+            // Atualiza o input
+            document.getElementById('diaInput').value = dia;
+            
+            // Atualiza a visualização
+            atualizarRelogio();
+        }
+
+        function parseHorario(horarioStr) {
+            const [inicio, fim] = horarioStr.split('-').map(h => h.trim());
+            const [horaInicio, minInicio] = inicio.split(':').map(Number);
+            const [horaFim, minFim] = fim.split(':').map(Number);
+            
+            const inicioMinutos = horaInicio * 60 + minInicio;
+            const fimMinutos = horaFim * 60 + minFim;
+            const chegada = inicioMinutos - 15; // 15 minutos antes
+            
+            return { inicio: inicioMinutos, chegada, saida: fimMinutos };
+        }
+
+        function atualizarSemanas() {
+            const treinamentosNovos = [];
+            
+            const dias = [
+                { checkbox: 'seg', input: 'segHora', dia: 1, nome: 'segunda-feira' },
+                { checkbox: 'qua', input: 'quaHora', dia: 3, nome: 'quarta-feira' },
+                { checkbox: 'sex', input: 'sexHora', dia: 5, nome: 'sexta-feira' },
+                { checkbox: 'sab', input: 'sabHora', dia: 6, nome: 'sábado' }
+            ];
+            
+            dias.forEach(d => {
+                if (document.getElementById(d.checkbox).checked) {
+                    const horarioStr = document.getElementById(d.input).value;
+                    const { inicio, chegada, saida } = parseHorario(horarioStr);
+                    treinamentosNovos.push({
+                        dia: d.dia,
+                        nome: d.nome,
+                        inicio,
+                        chegada,
+                        saida
+                    });
+                }
+            });
+            
+            treinamentos = treinamentosNovos;
+            gerarCalendario();
+            atualizarTabela();
+            atualizarRelogio();
+        }
+
+        function atualizarTabela() {
+            const tbody = document.querySelector('table tbody');
+            tbody.innerHTML = '';
+            
+            const diasSemanaInfo = [
+                { dia: 1, nome: 'Segunda-feira' },
+                { dia: 3, nome: 'Quarta-feira' },
+                { dia: 5, nome: 'Sexta-feira' },
+                { dia: 6, nome: 'Sábado' }
+            ];
+            
+            diasSemanaInfo.forEach(d => {
+                const treino = treinamentos.find(t => t.dia === d.dia);
+                
+                if (treino) {
+                    const horaInicio = Math.floor(treino.inicio / 60);
+                    const minInicio = treino.inicio % 60;
+                    const horaSaida = Math.floor(treino.saida / 60);
+                    const minSaida = treino.saida % 60;
+                    
+                    const horaChegada = Math.floor(treino.chegada / 60);
+                    const minChegada = treino.chegada % 60;
+                    
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                        <td>${d.nome}</td>
+                        <td>${String(horaInicio).padStart(2, '0')}:${String(minInicio).padStart(2, '0')}</td>
+                        <td>${String(horaChegada).padStart(2, '0')}:${String(minChegada).padStart(2, '0')}</td>
+                        <td>${String(horaSaida).padStart(2, '0')}:${String(minSaida).padStart(2, '0')}</td>
+                        <td><span class="status-inactive" id="status-${d.dia}">Inativo</span></td>
+                    `;
+                    tbody.appendChild(row);
+                }
+            });
+        }
+
+        function aplicarTodosOsDados() {
+            const nome = document.getElementById('nomeInput').value.trim();
+            
+            if (!nome) {
+                alert('❌ Por favor, digite um nome!');
+                return;
+            }
+            
+            document.getElementById('nomeAluno').textContent = nome;
+            
+            aplicarDataHora();
+            atualizarSemanas();
+            gerarCalendario();
+        }
+
+        function aplicarDataHora() {
+            const dia = parseInt(document.getElementById('diaInput').value);
+            const hora = parseInt(document.getElementById('horaInput').value);
+            const minuto = parseInt(document.getElementById('minutoInput').value);
+            const segundo = parseInt(document.getElementById('segundoInput').value);
+
+            if (dia < 1 || dia > 31 || hora < 0 || hora > 23 || minuto < 0 || minuto > 59 || segundo < 0 || segundo > 59) {
+                alert('❌ Valores inválidos! Por favor, verifique os campos.');
+                return;
+            }
+
+            dataCustomizada = new Date(2026, 4, dia, hora, minuto, segundo);
+            atualizarRelogio();
+        }
+
+        function resetarParaAgora() {
+            dataCustomizada = null;
+            const agora = new Date();
+            document.getElementById('diaInput').value = agora.getDate();
+            document.getElementById('horaInput').value = agora.getHours();
+            document.getElementById('minutoInput').value = agora.getMinutes();
+            document.getElementById('segundoInput').value = agora.getSeconds();
+            gerarCalendario();
+            atualizarRelogio();
+        }
+
+        function atualizarRelogio() {
+            const agora = dataCustomizada || new Date();
+            
+            // Formatar data e hora
+            const dia = String(agora.getDate()).padStart(2, '0');
+            const mes = String(agora.getMonth() + 1).padStart(2, '0');
+            const ano = agora.getFullYear();
+            const horas = String(agora.getHours()).padStart(2, '0');
+            const minutos = String(agora.getMinutes()).padStart(2, '0');
+            const segundos = String(agora.getSeconds()).padStart(2, '0');
+            
+            const dataHoraFormatada = `${dia}/${mes}/${ano} ${horas}:${minutos}:${segundos}`;
+            document.getElementById('dataHora').textContent = dataHoraFormatada;
+            
+            // Verificar status dos treinamentos
+            const diaSemana = agora.getDay();
+            const minutosAgora = agora.getHours() * 60 + agora.getMinutes();
+            
+            let proximoTreino = null;
+            let proximoTempo = Infinity;
+            
+            treinamentos.forEach((treino, index) => {
+                const statusElement = document.getElementById(`status-${treino.dia}`);
+                if (!statusElement) return;
+                
+                const isToday = diaSemana === treino.dia;
+                
+                if (isToday) {
+                    if (minutosAgora >= treino.chegada && minutosAgora <= treino.saida) {
+                        // Está em aula
+                        statusElement.textContent = '✓ EM AULA';
+                        statusElement.className = 'status-active';
+                    } else if (minutosAgora < treino.chegada) {
+                        // Aula ainda não começou
+                        statusElement.textContent = '⏳ Aguardando';
+                        statusElement.className = 'status-inactive';
+                        const tempo = treino.chegada - minutosAgora;
+                        if (tempo < proximoTempo) {
+                            proximoTempo = tempo;
+                            proximoTreino = `${treino.nome} em ${Math.floor(tempo / 60)}h ${tempo % 60}m`;
+                        }
+                    } else {
+                        // Aula já passou
+                        statusElement.textContent = 'Finalizado';
+                        statusElement.className = 'status-inactive';
+                    }
+                } else {
+                    statusElement.textContent = 'Inativo';
+                    statusElement.className = 'status-inactive';
+                    
+                    // Calcular próxima aula
+                    const diasAte = (treino.dia - diaSemana + 7) % 7;
+                    if (diasAte === 0) {
+                        // Próxima semana
+                        const tempo = 7 * 24 * 60 - minutosAgora + treino.chegada;
+                        if (tempo > 0 && tempo < proximoTempo) {
+                            proximoTempo = tempo;
+                            proximoTreino = `${treino.nome} em ${Math.floor(tempo / 60 / 24)} dias`;
+                        }
+                    } else {
+                        const tempo = diasAte * 24 * 60 - minutosAgora + treino.chegada;
+                        if (tempo > 0 && tempo < proximoTempo) {
+                            proximoTempo = tempo;
+                            proximoTreino = `${treino.nome} em ${Math.floor(tempo / 60 / 24)} dias`;
+                        }
+                    }
+                }
+            });
+            
+            // Atualizar próximo treinamento
+            if (proximoTreino) {
+                document.getElementById('proximoTreinamento').textContent = proximoTreino;
+            } else {
+                document.getElementById('proximoTreinamento').textContent = 'Nenhum treinamento disponível';
+            }
+        }
+
+        // Inicializar
+        document.getElementById('nomeAluno').textContent = document.getElementById('nomeInput').value;
+        gerarCalendario();
+        atualizarTabela();
+        atualizarRelogio();
+        setInterval(atualizarRelogio, 1000);
+    </script>
+</body>
+</html>
