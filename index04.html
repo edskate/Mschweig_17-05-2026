@@ -1,11 +1,234 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt-BR">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Controle de Ensaio - Murillo</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;padding:15px;background:#000;color:#fff;font-family:Arial,sans-serif;text-align:center}
+h1,h2,h3{color:#00ff66}
+.card{background:#111;border:1px solid #00ff66;border-radius:14px;padding:15px;margin:15px auto;max-width:950px}
+.nome{font-size:30px;color:#00ff66;font-weight:bold}
+#relogio{font-size:28px;color:#00ff66;font-weight:bold;margin:10px 0}
+#alertaDanca{margin-top:15px;padding:15px;border-radius:12px;border:2px solid #00ff66;font-size:22px;font-weight:bold;animation:piscar 1s infinite}
+@keyframes piscar{0%{opacity:1}50%{opacity:.55}100%{opacity:1}}
+input,textarea,button{width:95%;max-width:430px;padding:12px;margin:7px;border-radius:8px;border:none;font-size:16px}
+textarea{height:75px}
+button{background:#00aa44;color:white;font-weight:bold;cursor:pointer}
+button:hover{background:#00cc55}
+.btn-blue{background:#005bbb}.btn-red{background:#aa0000}.btn-gold{background:#b8860b}
+.info{background:#050505;border:1px solid #333;border-radius:10px;padding:12px;margin-top:10px}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:10px}
+.indicador{background:#050505;border:1px solid gold;border-radius:10px;padding:12px}
+.valor{font-size:26px;color:#00ff66;font-weight:bold}
+table{width:100%;border-collapse:collapse;margin-top:12px;font-size:14px}
+th,td{border:1px solid #555;padding:8px}
+th{background:#222;color:#00ff66}
+.ok{color:#00ff66;font-weight:bold}.atraso{color:#ffd700;font-weight:bold}.critico{color:#ff8800;font-weight:bold}.grave{color:#ff4444;font-weight:bold}
+@media(max-width:600px){body{padding:10px}#relogio{font-size:22px}#alertaDanca{font-size:18px}table{font-size:12px}th,td{padding:6px}}
+@media print{button,input,textarea{display:none}body{background:white;color:black}.card,.info,.indicador{background:white;color:black;border:1px solid black}h1,h2,h3,.nome,#relogio{color:black}#alertaDanca{animation:none;color:black!important;border-color:black!important}}
+</style>
 </head>
 <body>
-    
+
+<h1>🕺 Controle de Ensaio</h1>
+
+<div class="card">
+  <div class="nome">Murillo</div>
+  <h2>Horário Oficial de Ensaio</h2>
+  <input type="time" id="horarioOficial" value="10:00" onchange="salvarHorario(); atualizarAlerta();">
+  <p>Chegue até o horário oficial para ser considerado presente no horário.</p>
+</div>
+
+<div class="card">
+  <h2>Relógio em Tempo Real</h2>
+  <div id="relogio"></div>
+  <div id="alertaDanca">🕺 Horário Oficial de Ensaio: 10:00</div>
+</div>
+
+<div class="card">
+  <h2>Registrar Chegada do Ensaio</h2>
+  <input type="text" value="Murillo" readonly>
+  <input type="date" id="data">
+  <input type="time" id="hora" readonly>
+  <textarea id="obs" placeholder="Observação do ensaio"></textarea>
+  <button onclick="usarHoraAtual()">🕒 Marcar Chegada Agora</button>
+  <button onclick="registrar()">💾 Salvar no Histórico</button>
+</div>
+
+<div class="card">
+  <h2>Regras Automáticas</h2>
+  <div class="info">
+    <p>✅ Até o horário oficial: Presente no Horário</p>
+    <p>🟡 Até 30 minutos depois: Atrasado</p>
+    <p>🟠 De 31 até 59 minutos depois: Atraso Crítico</p>
+    <p>🔴 60 minutos ou mais depois: Falta Grave</p>
+  </div>
+</div>
+
+<div class="card">
+  <h2>Relatório de Pontualidade</h2>
+  <div class="grid">
+    <div class="indicador"><h3>Total</h3><div class="valor" id="totalReg">0</div></div>
+    <div class="indicador"><h3>Pontualidade</h3><div class="valor" id="pontualidade">0%</div></div>
+    <div class="indicador"><h3>Atrasos</h3><div class="valor" id="totalAtrasos">0</div></div>
+    <div class="indicador"><h3>Faltas Graves</h3><div class="valor" id="totalGraves">0</div></div>
+  </div>
+  <button class="btn-blue" onclick="window.print()">📄 Imprimir / Salvar em PDF</button>
+  <button class="btn-gold" onclick="exportarTexto()">📋 Copiar Relatório</button>
+  <button class="btn-red" onclick="limparHistorico()">🗑️ Limpar Histórico</button>
+
+  <h2>Histórico de Ensaios</h2>
+  <table>
+    <thead>
+      <tr><th>Data</th><th>Hora</th><th>Status</th><th>Atraso</th><th>Observação</th></tr>
+    </thead>
+    <tbody id="historico"></tbody>
+  </table>
+</div>
+
+<script>
+const NOME = "Murillo";
+const CHAVE_HISTORICO = "historico_ensaio_murillo";
+const CHAVE_HORARIO = "horario_ensaio_murillo";
+let registros = JSON.parse(localStorage.getItem(CHAVE_HISTORICO)) || [];
+
+window.onload = function(){
+  const horarioSalvo = localStorage.getItem(CHAVE_HORARIO);
+  if(horarioSalvo){document.getElementById("horarioOficial").value = horarioSalvo;}
+  document.getElementById("data").valueAsDate = new Date();
+  atualizarRelogio();
+  mostrarHistorico();
+};
+
+function salvarHorario(){
+  localStorage.setItem(CHAVE_HORARIO, document.getElementById("horarioOficial").value);
+}
+
+function atualizarRelogio(){
+  const agora = new Date();
+  document.getElementById("relogio").innerHTML =
+    agora.toLocaleDateString("pt-BR") + " - " + agora.toLocaleTimeString("pt-BR");
+  atualizarAlerta();
+}
+setInterval(atualizarRelogio,1000);
+
+function getLimiteMinutos(){
+  const horario = document.getElementById("horarioOficial").value || "10:00";
+  const partes = horario.split(":");
+  return Number(partes[0]) * 60 + Number(partes[1]);
+}
+
+function atualizarAlerta(){
+  const agora = new Date();
+  const atual = agora.getHours() * 60 + agora.getMinutes();
+  const limite = getLimiteMinutos();
+  const horario = document.getElementById("horarioOficial").value || "10:00";
+  const alerta = document.getElementById("alertaDanca");
+
+  if(atual <= limite){
+    alerta.innerHTML = "🕺✅ Presente no horário do ensaio: " + horario;
+    alerta.style.color = "#00ff66"; alerta.style.borderColor = "#00ff66";
+  }else if(atual <= limite + 30){
+    alerta.innerHTML = "⚠️🕺 Chegada em atraso";
+    alerta.style.color = "gold"; alerta.style.borderColor = "gold";
+  }else if(atual < limite + 60){
+    alerta.innerHTML = "🚨🕺 Atraso crítico";
+    alerta.style.color = "orange"; alerta.style.borderColor = "orange";
+  }else{
+    alerta.innerHTML = "❌🕺 Falta grave no ensaio";
+    alerta.style.color = "#ff4444"; alerta.style.borderColor = "#ff4444";
+  }
+}
+
+function usarHoraAtual(){
+  const agora = new Date();
+  document.getElementById("hora").value =
+    String(agora.getHours()).padStart(2,"0") + ":" + String(agora.getMinutes()).padStart(2,"0");
+  document.getElementById("data").valueAsDate = agora;
+}
+
+function registrar(){
+  const data = document.getElementById("data").value;
+  const hora = document.getElementById("hora").value;
+  const obs = document.getElementById("obs").value.trim();
+
+  if(!data || !hora){alert("Clique em 'Marcar Chegada Agora' antes de salvar.");return;}
+
+  const partes = hora.split(":");
+  const totalMin = Number(partes[0]) * 60 + Number(partes[1]);
+  const limite = getLimiteMinutos();
+  let status = "";
+  let atraso = 0;
+
+  if(totalMin <= limite){status = "✅ Presente no Horário"; atraso = 0;}
+  else if(totalMin <= limite + 30){status = "🟡 Atrasado"; atraso = totalMin - limite;}
+  else if(totalMin < limite + 60){status = "🟠 Atraso Crítico"; atraso = totalMin - limite;}
+  else{status = "🔴 Falta Grave"; atraso = totalMin - limite;}
+
+  registros.push({nome:NOME,data,hora,horarioOficial:document.getElementById("horarioOficial").value,status,atraso,obs});
+  localStorage.setItem(CHAVE_HISTORICO, JSON.stringify(registros));
+
+  document.getElementById("obs").value = "";
+  document.getElementById("hora").value = "";
+  mostrarHistorico();
+}
+
+function mostrarHistorico(){
+  const tbody = document.getElementById("historico");
+  if(registros.length === 0){
+    tbody.innerHTML = "<tr><td colspan='5'>Nenhum registro salvo ainda.</td></tr>";
+    atualizarIndicadores();
+    return;
+  }
+
+  let html = "";
+  registros.forEach(r=>{
+    let classe = "ok";
+    if(r.status.includes("Atrasado")) classe = "atraso";
+    if(r.status.includes("Crítico")) classe = "critico";
+    if(r.status.includes("Falta")) classe = "grave";
+    html += `<tr><td>${formatarData(r.data)}</td><td>${r.hora}</td><td class="${classe}">${r.status}</td><td>${r.atraso} min</td><td>${r.obs || "-"}</td></tr>`;
+  });
+  tbody.innerHTML = html;
+  atualizarIndicadores();
+}
+
+function atualizarIndicadores(){
+  const total = registros.length;
+  const pontuais = registros.filter(r=>r.status.includes("Presente")).length;
+  const atrasos = registros.filter(r=>r.status.includes("Atrasado") || r.status.includes("Crítico")).length;
+  const graves = registros.filter(r=>r.status.includes("Falta")).length;
+  const pct = total > 0 ? (pontuais / total) * 100 : 0;
+  document.getElementById("totalReg").innerText = total;
+  document.getElementById("pontualidade").innerText = pct.toFixed(1) + "%";
+  document.getElementById("totalAtrasos").innerText = atrasos;
+  document.getElementById("totalGraves").innerText = graves;
+}
+
+function formatarData(data){
+  const p = data.split("-");
+  return p[2] + "/" + p[1] + "/" + p[0];
+}
+
+function limparHistorico(){
+  if(confirm("Deseja apagar todo o histórico de Murillo?")){
+    localStorage.removeItem(CHAVE_HISTORICO);
+    registros = [];
+    mostrarHistorico();
+  }
+}
+
+function exportarTexto(){
+  let texto = "RELATÓRIO DE ENSAIO - MURILLO\n\n";
+  texto += "Horário Oficial: " + (document.getElementById("horarioOficial").value || "10:00") + "\n\n";
+  registros.forEach(r=>{
+    texto += `${formatarData(r.data)} | ${r.hora} | ${r.status} | ${r.atraso} min | ${r.obs || "-"}\n`;
+  });
+  navigator.clipboard.writeText(texto).then(()=>alert("Relatório copiado.")).catch(()=>alert(texto));
+}
+</script>
+
 </body>
 </html>
