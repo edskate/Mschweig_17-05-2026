@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Treinamento de Dança - Junho 2026</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:Arial,Helvetica,sans-serif;background:linear-gradient(135deg,#06121f,#152b66,#3b1973);color:#fff;min-height:100vh;padding:14px}
+.container{max-width:1100px;margin:auto;background:rgba(255,255,255,.96);color:#222;border-radius:18px;padding:22px;box-shadow:0 10px 35px #0008}
+h1{text-align:center;color:#1c2f7a;margin-bottom:8px;font-size:2rem}.sub{text-align:center;font-weight:bold;color:#333;margin-bottom:15px}.topo{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px;margin:15px 0}.card{background:#eef4ff;border-left:6px solid #2855d9;border-radius:12px;padding:14px}.card b{color:#163ba8}.oficial{background:#e9fff1;border:2px solid #1faa59;color:#0d6b32;text-align:center;font-size:1.15rem;font-weight:bold;border-radius:12px;padding:14px;margin:12px 0}.painel{background:#fff;border:2px solid #2855d9;border-radius:14px;padding:15px;margin:14px 0}h2{color:#1c2f7a;margin-bottom:10px;font-size:1.25rem}.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:10px}label{font-weight:bold;font-size:.95rem}input,select,textarea{width:100%;padding:10px;margin-top:5px;border:1px solid #bbb;border-radius:8px;font-size:1rem}textarea{min-height:70px;resize:vertical}.dias-check{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:8px}.dias-check label{background:#f2f5ff;border:1px solid #cad5ff;border-radius:10px;padding:10px;display:flex;gap:8px;align-items:center}.dias-check input{width:auto;margin:0}.btns{display:flex;flex-wrap:wrap;gap:10px;margin-top:12px}button{border:0;border-radius:10px;padding:11px 15px;font-weight:bold;cursor:pointer;font-size:.95rem}.primary{background:#2855d9;color:white}.green{background:#1faa59;color:white}.red{background:#c62828;color:white}.dark{background:#222;color:white}.yellow{background:#ffd34d;color:#111}.calendario{display:grid;grid-template-columns:repeat(7,1fr);gap:7px}.semana{background:#1c2f7a;color:#fff;text-align:center;padding:9px;border-radius:8px;font-weight:bold}.dia{min-height:72px;border:2px solid #ddd;border-radius:10px;background:#fff;padding:7px;cursor:pointer;position:relative}.dia:hover{transform:scale(1.02)}.dia.treino{background:#dcffe7;border-color:#1faa59}.dia.selecionado{outline:4px solid #2855d9}.num{font-weight:bold;font-size:1.1rem}.hora{font-size:.78rem;margin-top:6px;color:#0d6b32;font-weight:bold}.vazio{visibility:hidden}.legenda{display:flex;gap:14px;flex-wrap:wrap;margin-top:12px;font-size:.9rem}.box{display:inline-block;width:18px;height:18px;border-radius:4px;vertical-align:middle;margin-right:5px;border:1px solid #999}table{width:100%;border-collapse:collapse;margin-top:12px;background:#fff}th{background:#1c2f7a;color:white;padding:10px;border:1px solid #1c2f7a}td{border:1px solid #ddd;padding:9px;text-align:left}tr:nth-child(even){background:#f7f7f7}.status{font-weight:bold;padding:5px 8px;border-radius:8px;display:inline-block}.ok{background:#d4edda;color:#155724}.atraso{background:#fff3cd;color:#856404}.critico{background:#f8d7da;color:#721c24}.falta{background:#111;color:#fff}.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:10px}.stat{background:#f2f5ff;border-radius:12px;padding:13px;text-align:center;border:1px solid #d6ddff}.stat strong{display:block;font-size:1.6rem;color:#1c2f7a}@media(max-width:650px){body{padding:8px}.container{padding:13px}h1{font-size:1.45rem}.calendario{gap:4px}.dia{min-height:58px;padding:5px}.hora{font-size:.68rem}th,td{font-size:.82rem;padding:7px}.semana{font-size:.78rem;padding:7px}}
+@media print{body{background:#fff;color:#000}.container{box-shadow:none}.painel, .card, .oficial{break-inside:avoid}.btns{display:none}}
+</style>
+</head>
+<body>
+<div class="container">
+<h1>🎭 Treinamento de Dança - Junho 2026</h1>
+<p class="sub">Controle de presença, horário, histórico e evolução do mês</p>
+<div class="oficial">🕺 Horário oficial no calendário: chegada até 20:00 | treino 20:00 às 21:30</div>
+
+<div class="topo">
+  <div class="card"><b>👤 Aluno/Dançarino:</b><br><span id="nomeTela">Dança</span></div>
+  <div class="card"><b>⏰ Data e hora atual:</b><br><span id="relogio">--/--/---- --:--:--</span></div>
+  <div class="card"><b>📍 Próximo treinamento:</b><br><span id="proximo">--</span></div>
+</div>
+
+<div class="painel">
+<h2>⚙️ Cadastro e dias de treino</h2>
+<div class="grid">
+  <div><label>Nome</label><input id="nome" value="Dança"></div>
+  <div><label>Horário oficial</label><input id="horario" value="20:00-21:30"></div>
+</div>
+<br>
+<div class="dias-check">
+  <label><input type="checkbox" id="seg" checked> Segunda</label>
+  <label><input type="checkbox" id="ter" checked> Terça</label>
+  <label><input type="checkbox" id="qua" checked> Quarta</label>
+  <label><input type="checkbox" id="qui"> Quinta</label>
+  <label><input type="checkbox" id="sex" checked> Sexta</label>
+  <label><input type="checkbox" id="sab" checked> Sábado</label>
+  <label><input type="checkbox" id="dom"> Domingo</label>
+</div>
+<div class="btns">
+  <button class="primary" onclick="aplicarConfig()">✓ Aplicar alterações</button>
+  <button class="dark" onclick="window.print()">📄 Salvar em PDF</button>
+</div>
+</div>
+
+<div class="painel">
+<h2>📅 Calendário - Junho 2026</h2>
+<div class="calendario" id="calendario"></div>
+<div class="legenda">
+  <span><i class="box" style="background:#dcffe7;border-color:#1faa59"></i>Dia com treino às 20:00</span>
+  <span><i class="box" style="background:#fff"></i>Dia normal</span>
+  <span><i class="box" style="outline:3px solid #2855d9;background:#fff"></i>Dia selecionado</span>
+</div>
+</div>
+
+<div class="painel">
+<h2>✅ Registrar chegada</h2>
+<div class="grid">
+  <div><label>Data selecionada</label><input id="dataSelecionada" readonly></div>
+  <div><label>Dançarino</label><input id="dancarino" placeholder="Nome do dançarino"></div>
+</div>
+<label>Observações do treino</label>
+<textarea id="obs" placeholder="Ex: coreografia estudada, dificuldades, suavidade, coordenação, acrobacia..."></textarea>
+<div class="btns">
+  <button class="green" onclick="registrarChegada()">🕺 Registrar chegada agora</button>
+  <button class="yellow" onclick="registrarFalta()">⚠️ Registrar falta</button>
+  <button class="red" onclick="limparHistorico()">🗑️ Limpar histórico</button>
+</div>
+</div>
+
+<div class="painel">
+<h2>📊 Estatísticas do mês</h2>
+<div class="stats">
+  <div class="stat">Treinos registrados<strong id="sTotal">0</strong></div>
+  <div class="stat">No horário<strong id="sOk">0</strong></div>
+  <div class="stat">Atrasos<strong id="sAtraso">0</strong></div>
+  <div class="stat">Faltas<strong id="sFalta">0</strong></div>
+  <div class="stat">Frequência<strong id="sFreq">0%</strong></div>
+</div>
+</div>
+
+<div class="painel">
+<h2>📋 Tabela de horários</h2>
+<table>
+<thead><tr><th>Dia</th><th>Início</th><th>Chegada limite</th><th>Saída</th><th>Status atual</th></tr></thead>
+<tbody id="tabela"></tbody>
+</table>
+</div>
+
+<div class="painel">
+<h2>💾 Histórico salvo</h2>
+<table>
+<thead><tr><th>Data</th><th>Dançarino</th><th>Chegada</th><th>Status</th><th>Atraso</th><th>Observação</th></tr></thead>
+<tbody id="historico"></tbody>
+</table>
+</div>
+</div>
+
+<script>
+const ANO=2026, MES=5; // Junho: 5 no JavaScript
+let selecionada=1;
+let treinos=[1,2,3,5,6];
+const nomes=['Domingo','Segunda-feira','Terça-feira','Quarta-feira','Quinta-feira','Sexta-feira','Sábado'];
+const ids=['dom','seg','ter','qua','qui','sex','sab'];
+function pad(n){return String(n).padStart(2,'0')}
+function parseHoras(){let v=document.getElementById('horario').value||'20:00-21:30';let p=v.split('-');return{inicio:p[0]||'20:00',saida:p[1]||'21:30'}}
+function minHora(h){let[a,b]=h.split(':').map(Number);return a*60+(b||0)}
+function dataBR(d){return pad(d)+'/06/2026'}
+function aplicarConfig(){document.getElementById('nomeTela').textContent=document.getElementById('nome').value||'Dança';treinos=[];ids.forEach((id,i)=>{if(document.getElementById(id).checked)treinos.push(i)});gerarCalendario();gerarTabela();salvarConfig();}
+function gerarCalendario(){const cal=document.getElementById('calendario');cal.innerHTML='';['Dom','Seg','Ter','Qua','Qui','Sex','Sáb'].forEach(s=>{let e=document.createElement('div');e.className='semana';e.textContent=s;cal.appendChild(e)});let primeiro=new Date(ANO,MES,1).getDay();for(let i=0;i<primeiro;i++){let v=document.createElement('div');v.className='dia vazio';cal.appendChild(v)}for(let d=1;d<=30;d++){let dt=new Date(ANO,MES,d);let dow=dt.getDay();let div=document.createElement('div');div.className='dia'+(treinos.includes(dow)?' treino':'')+(d===selecionada?' selecionado':'');div.onclick=()=>{selecionada=d;document.getElementById('dataSelecionada').value=dataBR(d);gerarCalendario()};div.innerHTML='<div class="num">'+d+'</div>'+(treinos.includes(dow)?'<div class="hora">20:00<br>até 21:30</div>':'');cal.appendChild(div)}document.getElementById('dataSelecionada').value=dataBR(selecionada)}
+function gerarTabela(){let tb=document.getElementById('tabela');tb.innerHTML='';let h=parseHoras();treinos.forEach(d=>{tb.innerHTML+=`<tr><td>${nomes[d]}</td><td>${h.inicio}</td><td>20:00</td><td>${h.saida}</td><td><span id="st${d}" class="status">--</span></td></tr>`})}
+function atualizarRelogio(){let agora=new Date();document.getElementById('relogio').textContent=pad(agora.getDate())+'/'+pad(agora.getMonth()+1)+'/'+agora.getFullYear()+' '+pad(agora.getHours())+':'+pad(agora.getMinutes())+':'+pad(agora.getSeconds());let dow=agora.getDay(), m=agora.getHours()*60+agora.getMinutes();let inicio=minHora('20:00'), saida=minHora(parseHoras().saida);treinos.forEach(d=>{let el=document.getElementById('st'+d);if(!el)return;if(d===dow&&m>=inicio&&m<=saida){el.textContent='🟢 Em treino';el.className='status ok'}else if(d===dow&&m<inicio){el.textContent='⏳ Hoje às 20:00';el.className='status atraso'}else{el.textContent='Inativo';el.className='status'}});let prox='';for(let i=0;i<8;i++){let nd=(dow+i)%7;if(treinos.includes(nd)){if(i===0&&m<inicio)prox='Hoje às 20:00';else if(i>0)prox=nomes[nd]+' às 20:00';if(prox)break}}document.getElementById('proximo').textContent=prox||'Nenhum treino marcado'}
+function classificar(hora){let m=minHora(hora);if(m<=minHora('20:00'))return{status:'✅ Dentro do horário',classe:'ok',atraso:0};if(m<=minHora('20:30'))return{status:'⚠️ Atrasado',classe:'atraso',atraso:m-minHora('20:00')};if(m<minHora('21:00'))return{status:'🔴 Atraso crítico',classe:'critico',atraso:m-minHora('20:00')};return{status:'❌ Falta grave após 21:00',classe:'falta',atraso:m-minHora('20:00')}}
+function registros(){return JSON.parse(localStorage.getItem('histTreinoJunho2026')||'[]')}
+function salvar(r){localStorage.setItem('histTreinoJunho2026',JSON.stringify(r));renderHistorico()}
+function registrarChegada(){let agora=new Date();let hora=pad(agora.getHours())+':'+pad(agora.getMinutes());let c=classificar(hora);let r=registros();r.push({data:document.getElementById('dataSelecionada').value,dancarino:document.getElementById('dancarino').value||document.getElementById('nome').value||'Dança',hora,status:c.status,classe:c.classe,atraso:c.atraso,obs:document.getElementById('obs').value});salvar(r);document.getElementById('obs').value=''}
+function registrarFalta(){let r=registros();r.push({data:document.getElementById('dataSelecionada').value,dancarino:document.getElementById('dancarino').value||document.getElementById('nome').value||'Dança',hora:'--',status:'❌ Falta sem registro de chegada',classe:'falta',atraso:'--',obs:document.getElementById('obs').value});salvar(r);document.getElementById('obs').value=''}
+function renderHistorico(){let tb=document.getElementById('historico');let r=registros();tb.innerHTML='';r.forEach(x=>{tb.innerHTML+=`<tr><td>${x.data}</td><td>${x.dancarino}</td><td>${x.hora}</td><td><span class="status ${x.classe}">${x.status}</span></td><td>${x.atraso==='--'?'--':x.atraso+' min'}</td><td>${x.obs||''}</td></tr>`});let total=r.length, ok=r.filter(x=>x.classe==='ok').length, at=r.filter(x=>x.classe==='atraso'||x.classe==='critico').length, falta=r.filter(x=>x.classe==='falta').length;document.getElementById('sTotal').textContent=total;document.getElementById('sOk').textContent=ok;document.getElementById('sAtraso').textContent=at;document.getElementById('sFalta').textContent=falta;document.getElementById('sFreq').textContent=total?Math.round(((total-falta)/total)*100)+'%':'0%'}
+function limparHistorico(){if(confirm('Apagar todo o histórico salvo?')){localStorage.removeItem('histTreinoJunho2026');renderHistorico()}}
+function salvarConfig(){localStorage.setItem('configTreinoJunho2026',JSON.stringify({nome:document.getElementById('nome').value,horario:document.getElementById('horario').value,treinos}))}
+function carregarConfig(){let c=JSON.parse(localStorage.getItem('configTreinoJunho2026')||'null');if(c){document.getElementById('nome').value=c.nome||'Dança';document.getElementById('horario').value=c.horario||'20:00-21:30';ids.forEach((id,i)=>document.getElementById(id).checked=(c.treinos||[]).includes(i));}}
+carregarConfig();aplicarConfig();renderHistorico();setInterval(atualizarRelogio,1000);atualizarRelogio();
+</script>
+</body>
+</html>
