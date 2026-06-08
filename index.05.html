@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Treinamento de Dança 2026</title>
+    <title>Treinamento de Dança - Junho 2026</title>
     <style>
         * {
             margin: 0;
@@ -290,7 +290,7 @@
 </head>
 <body>
     <div class="container">
-        <h1>🎭 Treinamento de Dança 2026</h1>
+        <h1>🎭 Treinamento de Dança - Junho 2026</h1>
         
         <div class="info-box">
             <p>� Aluno: <span class="datetime" id="nomeAluno">Digite seu nome</span></p>
@@ -306,8 +306,8 @@
                     <input type="text" id="nomeInput" placeholder="Digite seu nome" value="Dança">
                 </div>
                 <div class="input-field">
-                    <label for="diaInput">Dia (1-31):</label>
-                    <input type="number" id="diaInput" min="1" max="31" value="21">
+                    <label for="diaInput">Dia (1-30):</label>
+                    <input type="number" id="diaInput" min="1" max="30" value="1">
                 </div>
                 <div class="input-field">
                     <label for="horaInput">Hora (0-23):</label>
@@ -361,8 +361,8 @@
         </div>
 
         <div class="calendario-section">
-            <h3>📅 Calendario - Maio 2026</h3>
-            <div class="calendario" id="calendarioMaio">
+            <h3>📅 Calendário - Junho 2026</h3>
+            <div class="calendario" id="calendarioJunho">
                 <!-- Será preenchido por JavaScript -->
             </div>
             <div class="legenda-calendario">
@@ -412,7 +412,7 @@
         ];
 
         function gerarCalendario() {
-            const calendarioDiv = document.getElementById('calendarioMaio');
+            const calendarioDiv = document.getElementById('calendarioJunho');
             calendarioDiv.innerHTML = '';
             
             // Adicionar header com dias da semana
@@ -424,10 +424,10 @@
                 calendarioDiv.appendChild(headerDiv);
             });
             
-            // Primeiro dia de maio 2026 é sexta-feira (dia 5 da semana, índice 5)
-            const primeiroMaio = new Date(2026, 4, 1);
-            const ultimoDiaMaio = new Date(2026, 4, 31);
-            const diasVazios = primeiroMaio.getDay();
+            // Primeiro dia de junho 2026 é segunda-feira (dia 1 da semana, índice 1)
+            const primeiroJunho = new Date(2026, 5, 1);
+            const ultimoDiaJunho = new Date(2026, 5, 30);
+            const diasVazios = primeiroJunho.getDay();
             
             // Dias vazios antes do primeiro dia do mês
             for (let i = 0; i < diasVazios; i++) {
@@ -438,9 +438,9 @@
             }
             
             // Dias do mês
-            for (let dia = 1; dia <= 31; dia++) {
+            for (let dia = 1; dia <= 30; dia++) {
                 const diaDiv = document.createElement('div');
-                const dataAtual = new Date(2026, 4, dia);
+                const dataAtual = new Date(2026, 5, dia);
                 const diaSemana = dataAtual.getDay();
                 
                 // Verificar se é um dia com treinamento
@@ -579,12 +579,12 @@
             const minuto = parseInt(document.getElementById('minutoInput').value);
             const segundo = parseInt(document.getElementById('segundoInput').value);
 
-            if (dia < 1 || dia > 31 || hora < 0 || hora > 23 || minuto < 0 || minuto > 59 || segundo < 0 || segundo > 59) {
+            if (dia < 1 || dia > 30 || hora < 0 || hora > 23 || minuto < 0 || minuto > 59 || segundo < 0 || segundo > 59) {
                 alert('❌ Valores inválidos! Por favor, verifique os campos.');
                 return;
             }
 
-            dataCustomizada = new Date(2026, 4, dia, hora, minuto, segundo);
+            dataCustomizada = new Date(2026, 5, dia, hora, minuto, segundo);
             atualizarRelogio();
         }
 
@@ -672,7 +672,7 @@
             if (proximoTreino) {
                 document.getElementById('proximoTreinamento').textContent = proximoTreino;
             } else {
-                document.getElementById('proximoTreinamento').texedskate/NewRepotContent = 'Nenhum treinamento disponível';
+                document.getElementById('proximoTreinamento').textContent = 'Nenhum treinamento disponível';
             }
         }
 
